@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="1.6" jdk_type="JavaSDK">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<lib name="gdx.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../Bee/libs/gdx-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/Bee/libs/gdx-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Bee/libs/gdx.jar!/"/>
+	</lib>
+	<lib name="gdx-backend-android.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/libs/gdx-backend-android-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/Bee-android/libs/gdx-backend-android-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Bee-android/libs/gdx-backend-android.jar!/"/>
+	</lib>
+</component>
