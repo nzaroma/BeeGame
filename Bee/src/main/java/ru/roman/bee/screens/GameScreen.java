@@ -5,6 +5,7 @@ import ru.roman.bee.controller.WorldController;
 import ru.roman.bee.model.world.World;
 import ru.roman.bee.view.RightPanel;
 import ru.roman.bee.view.WorldRenderer;
+import ru.roman.bee.view.hud.EnergyBar;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,8 @@ public class GameScreen implements Screen, InputProcessor{
 	private World world;
 	private WorldRenderer renderer;
 	private RightPanel rightPanel;
+	private EnergyBar energyBar;
+	
 	private WorldController worldController;
 
 	private int width, height;
@@ -27,6 +30,7 @@ public class GameScreen implements Screen, InputProcessor{
 		world = new World();
 		renderer = new WorldRenderer(world);
 		rightPanel = new RightPanel(world);
+		energyBar = new EnergyBar(world);
 		
 		worldController = new WorldController(world);
 		Gdx.input.setInputProcessor(this);
@@ -99,6 +103,9 @@ public class GameScreen implements Screen, InputProcessor{
 		
 		Gdx.gl.glViewport(WorldConstants.WORLD_WIDTH,0,300,WorldConstants.WORLD_HEIGHT);   
 		rightPanel.render();
+		
+		Gdx.gl.glViewport(0, 200, 50, 200);
+		energyBar.render();
 		
 	}
 

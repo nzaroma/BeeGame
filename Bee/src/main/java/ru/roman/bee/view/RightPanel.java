@@ -3,7 +3,10 @@ package ru.roman.bee.view;
 import ru.roman.bee.constants.WorldConstants;
 import ru.roman.bee.controller.WorldController;
 import ru.roman.bee.model.player.Player;
+import ru.roman.bee.model.shots.Bullet;
+import ru.roman.bee.model.unit.Unit;
 import ru.roman.bee.model.world.World;
+import ru.roman.bee.utils.StringUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -33,7 +36,7 @@ public class RightPanel {
 		this.world = world;
 		player = world.getPlayer();
 		this.camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		setCamera(CAMERA_WIDTH/2f, player.getPosition().y);
+		setCamera(CAMERA_WIDTH/2f, CAMERA_HEIGHT/2); 
 		Texture.setEnforcePotImages(false);
 		font.setColor(1, 1, 0, 1);
 	}
@@ -49,16 +52,7 @@ public class RightPanel {
 	
 	
 	
-public void drawRightPanel() {
-		
-		int rowInterval = 20;
-		int rowPosition = 20;
-		int playerBlock = 0;
-		int playerRowsCount;
-//		int unitBlock = playerBlock + playerRowsCount*rowInterval;
-		int bulletBlock;
-		int rowCount = 1;
-		
+public void drawRightPanel() {		
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -66,20 +60,28 @@ public void drawRightPanel() {
 		String playerCoord = player.getPosition().x+","+player.getPosition().y;
 		String playerVelocity = player.getVelocity().x+","+player.getVelocity().y;
 		
-		font.draw(batch, rpPlayer, 100, CAMERA_HEIGHT);
+		font.draw(batch, rpPlayer, 0, CAMERA_HEIGHT);
+		drawRow(StringUtils.build("coordinates: ", playerCoord));
+		drawRow(StringUtils.build("velocity: ", playerVelocity));
+		int number = 0; 
+		for(Unit unit: world.getUnitList()) {
+			drawRow(StringUtils.build("unit ", Integer.toString(number), " ", unit.getPosition().toString()));
+			number++;
+		}
+		number = 0; 
+		for(Bullet bullet: world.getBulletList()) {
+			drawRow(StringUtils.build("bullet ", Integer.toString(number), " ", bullet.getPosition().toString()));
+			number++;
+		}
 		
-		drawRow(rpPlayer);
-		drawRow(rpPlayer);
-		drawRow(rpPlayer);
-
-		
+		rowCount=1;
 		batch.end();
 	}
 
 	public void drawRow(String textToDraw) {
 		int rowInterval = 20;
 		rowPosition = rowCount*rowInterval;
-		font.draw(batch, textToDraw, WorldConstants.WORLD_WIDTH, WorldConstants.WORLD_HEIGHT+rowPosition+rowInterval);
+		font.draw(batch, textToDraw, 0, WorldConstants.WORLD_HEIGHT-rowPosition);
 		rowPosition += rowInterval;
 		rowCount++;
 	}

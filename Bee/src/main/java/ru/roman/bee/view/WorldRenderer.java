@@ -28,8 +28,8 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 	int rowPosition;
 	
 	private World world;
-	public OrthographicCamera camera;
-	ShapeRenderer shapeRenderer = new  ShapeRenderer();
+	private OrthographicCamera camera;
+	private ShapeRenderer shapeRenderer = new  ShapeRenderer();
 	
 	public SpriteBatch batch = new SpriteBatch();
 	Rectangle rectangle;
