@@ -64,8 +64,8 @@ public void drawRightPanel() {
 		drawRow(StringUtils.build("coordinates: ", playerCoord));
 		drawRow(StringUtils.build("velocity: ", playerVelocity));
 		int number = 0; 
-		for(Unit unit: world.getUnitList()) {
-			drawRow(StringUtils.build("unit ", Integer.toString(number), " ", unit.getPosition().toString()));
+		for(Unit unit: world.getUnitList()) { // TODO FIND ERROR
+			drawRow(StringUtils.build("unit ", unit.getClass().toString(), "  ", Integer.toString(number), " ", unit.getPosition().toString()));
 			number++;
 		}
 		number = 0; 

@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class WorldRenderer implements PlayerTextures, UnitTextures{
 	public static float CAMERA_WIDTH = 800;  //800
@@ -131,7 +132,7 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 //			batch.setProjectionMatrix(camera.combined);
 //						
 //			batch.draw(flowerTexture, x1, y1);
-			
+			drawUnitInfo(unit);
 		}
 //		batch.end();
 		shapeRenderer.end();
@@ -190,6 +191,16 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 		batch.end();
 	}	
 	
+	public void drawUnitInfo(Unit unit) {
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		String unitCoord = unit.getPosition().x+","+unit.getPosition().y;
+		font.draw(batch, unitCoord, unit.getPosition().x, unit.getPosition().y+unit.getBounds().height);
+		font.draw(batch, unit.getClass().toString(), unit.getPosition().x , unit.getPosition().y+unit.getBounds().height-20);
+		
+		batch.end();
+	}
+	
 	public void drawInfo() {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -214,29 +225,7 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 		batch.end();
 	}
 	
-//	public <T> void drawInfo(Class<T> clazz) {
-//		batch.setProjectionMatrix(camera.combined);
-//		batch.begin();
-//		
-//		
-//		String playerCoord = t.getPosition().x+","+player.getPosition().y;
-//		String playerVelocity = player.getVelocity().x+","+player.getVelocity().y;
-//		
-//		// font will be always displayed
-//		float fontWidth = font.getBounds(playerCoord).width;
-//		if(fontWidth > CAMERA_WIDTH - player.SIZE - player.getPosition().x) {
-//			font.draw(batch, playerCoord, player.getPosition().x - fontWidth, player.getPosition().y+player.getPlayerBounds().height);
-//			font.draw(batch, playerVelocity, player.getPosition().x - fontWidth, player.getPosition().y+player.getPlayerBounds().height-20);
-//			font.draw(batch, Integer.toString(player.getEnergy()), player.getPosition().x - fontWidth, player.getPosition().y+player.getPlayerBounds().height-40);
-//		}
-//		else {
-//			font.draw(batch, playerCoord, player.getPosition().x+player.getPlayerBounds().width, player.getPosition().y+player.getPlayerBounds().height);
-//			font.draw(batch, playerVelocity, player.getPosition().x, player.getPosition().y+player.getPlayerBounds().height-20);
-//			font.draw(batch, Integer.toString(player.getEnergy()), player.getPosition().x+player.getPlayerBounds().width, player.getPosition().y+player.getPlayerBounds().height-40);
-//		}
-//		font.draw(batch, playerVelocity, 10, 580);
-//		batch.end();
-//	}
+	
 	
 }
 
