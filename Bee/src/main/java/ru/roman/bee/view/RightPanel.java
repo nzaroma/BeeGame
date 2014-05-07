@@ -65,12 +65,12 @@ public void drawRightPanel() {
 		drawRow(StringUtils.build("velocity: ", playerVelocity));
 		int number = 0; 
 		for(Unit unit: world.getUnitList()) { // TODO FIND ERROR
-			drawRow(StringUtils.build("unit ", unit.getClass().toString(), "  ", Integer.toString(number), " ", unit.getPosition().toString()));
+			drawRow(StringUtils.build("unit ", unit.getClass(), "  ", number, " ", unit.getPosition()));
 			number++;
 		}
 		number = 0; 
 		for(Bullet bullet: world.getBulletList()) {
-			drawRow(StringUtils.build("bullet ", Integer.toString(number), " ", bullet.getPosition().toString()));
+			drawRow(StringUtils.build("bullet ", number, " ", bullet.getPosition()));
 			number++;
 		}
 		

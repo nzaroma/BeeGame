@@ -4,19 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.roman.bee.model.player.Player;
+import ru.roman.bee.model.world.World;
 
 import com.badlogic.gdx.Input.Keys;
 
 public class InputController {
 	private Player player;
-	private PlayerController playerController;
+//	private PlayerController playerController;
+	private BulletController bulletController;
 	static Map<UserKeys, Boolean> keyMap = new HashMap<UserKeys, Boolean>();
+	private WorldController worldController;
+	private World world;
 	
 	public InputController(Player player, PlayerController controller) {
 		this.player = player;
-		playerController = controller;
+//		playerController = controller;
 	}
 	
+	public InputController(WorldController worldController) {
+		bulletController = new BulletController(worldController.world); 
+		this.player = worldController.world.getPlayer();
+	}
+
 	enum UserKeys {
 		LEFT, RIGHT, UP, DOWN, SHOOT, DEBUG;
 	}
@@ -94,7 +103,7 @@ public class InputController {
 			spaceReleased();
 	}
 	
-	public void processInput() {
+	public void processInput(float delta) {
 		if(keyMap.get(UserKeys.LEFT))
 			player.getVelocity().x = -Player.SPEED;
 		if(keyMap.get(UserKeys.RIGHT))
@@ -110,7 +119,8 @@ public class InputController {
 			player.getVelocity().y = 100;
 		
 		if(keyMap.get(UserKeys.SHOOT))
-			playerController.processShooting();
+//			playerController.processShooting();
+		bulletController.processPlayerShooting();
 		
 		
 	}

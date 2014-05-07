@@ -11,8 +11,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class World {
 
-	private Array<Unit> unitList = new Array<Unit>();
-	private Array<Bullet> bulletList= new Array<Bullet>();
+	public static Array<Unit> unitList = new Array<Unit>();
+	public static Array<Bullet> bulletList= new Array<Bullet>();
 	private Player player;
 
 	public int width;

@@ -7,10 +7,18 @@ public class StringUtils {
 	 * @return summ of stringPart
 	 */
 	public static String build(String... stringPart) {
-		String finalString = "";
-		for(String s: stringPart) {
-			finalString += s;
-		}
-		return finalString;
+		StringBuilder stringBuilder = new StringBuilder(256);
+		for(String part: stringPart) {
+			stringBuilder.append(part);
+		}		
+		return stringBuilder.toString();
+	}
+	
+	public static String build(Object... objects) {
+		StringBuilder stringBuilder = new StringBuilder(256);
+		for(Object part: objects) {
+			stringBuilder.append(part);
+		}		
+		return stringBuilder.toString();
 	}
 }

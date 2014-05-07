@@ -1,14 +1,19 @@
 package ru.roman.bee.model.player;
 
 import ru.roman.bee.constants.WorldConstants;
+import ru.roman.bee.controller.BulletController;
 import ru.roman.bee.model.AbstractParent;
+import ru.roman.bee.model.IShooting;
+import ru.roman.bee.model.shots.Bullet;
+import ru.roman.bee.model.shots.Sting;
+import ru.roman.bee.model.world.World;
 import ru.roman.bee.utils.StringUtils;
 import ru.roman.bee.view.WorldRenderer;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends AbstractParent {
+public class Player extends AbstractParent implements IShooting {
 	public enum State {
 		NONE, MOVING, DEAD;
 	}
@@ -73,5 +78,16 @@ public class Player extends AbstractParent {
 	
 	public String toString() {
 		return StringUtils.build("player ", getPosition().toString());
+	}
+
+	@Override
+	public void shoot() {
+		// TODO Auto-generated method stub
+		Bullet bullet = new Sting(this, null);		
+		this.decreaseEnergy(bullet.getEnergy());
+//		bullet.getVelocity().y = this.getVelocity().y + 100;
+		bullet.getVelocity().y = Sting.SPEED;
+		World.bulletList.add(bullet);
+		
 	}
 }

@@ -1,5 +1,7 @@
 package ru.roman.bee.model;
 
-public abstract class  AbstractParent {
+import com.badlogic.gdx.math.Vector2;
 
+public abstract class  AbstractParent {
+	public abstract Vector2 getPosition();
 }

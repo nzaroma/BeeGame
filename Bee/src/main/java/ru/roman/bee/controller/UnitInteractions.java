@@ -4,8 +4,10 @@ import java.util.Iterator;
 
 import ru.roman.bee.model.player.Player;
 import ru.roman.bee.model.shots.Bullet;
+import ru.roman.bee.model.unit.State;
 import ru.roman.bee.model.unit.Unit;
 import ru.roman.bee.model.world.World;
+import ru.roman.bee.utils.StringUtils;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -29,13 +31,14 @@ public class UnitInteractions {
 	private void processPlayerIntersectUnit() {
 		Iterator<Unit> iterator = unitArray.iterator();
 		while(iterator.hasNext()) {
-			Unit tempUnit = iterator.next();
-			if(player.getPlayerBounds().overlaps(tempUnit.getBounds())) {
-				tempUnit.setOverlapped(true);
-				player.increaseEnergy(tempUnit.getEnergy());
-				tempUnit.setEnergy(0);
+			Unit unit = iterator.next();
+			if(player.getPlayerBounds().overlaps(unit.getBounds())) {
+				unit.setOverlapped(true);
+				player.increaseEnergy(unit.getEnergy());
+				unit.setEnergy(0);
 //				iterator.remove();			
 				//delete units after some time
+				unit.setState(State.DEAD);
 			}
 		}
 	}
@@ -48,7 +51,11 @@ public class UnitInteractions {
 			while(iteratorUnit.hasNext()) {
 				Unit unit = iteratorUnit.next();
 				if(bullet.getBounds().overlaps(unit.getBounds())) {
-					unit.setOverlapped(true);
+					if(!bullet.getParent().equals(unit)) {
+						unit.setOverlapped(true);
+						unit.setState(State.DEAD);
+					}
+					
 				}
 			}
 		}

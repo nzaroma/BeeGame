@@ -5,8 +5,11 @@ import ru.roman.bee.constants.WorldConstants;
 import ru.roman.bee.model.AbstractParent;
 import ru.roman.bee.model.player.Player;
 import ru.roman.bee.model.shots.Bullet;
+import ru.roman.bee.model.unit.Flower;
 import ru.roman.bee.model.unit.Unit;
+import ru.roman.bee.model.unit.Wasp;
 import ru.roman.bee.model.world.World;
+import ru.roman.bee.utils.StringUtils;
 import ru.roman.bee.view.textures.PlayerTextures;
 import ru.roman.bee.view.textures.UnitTextures;
 
@@ -21,9 +24,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class WorldRenderer implements PlayerTextures, UnitTextures{
-	public static float CAMERA_WIDTH = 800;  //800
-	public static float CAMERA_HEIGHT= 600;
+	public static int CAMERA_WIDTH = 800;  //800
+	public static int CAMERA_HEIGHT= 600;
 	
+	public static final boolean withTextures = true;
 	
 	int rowCount = 1;
 	int rowPosition;
@@ -67,15 +71,20 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 		setCamera(CAMERA_WIDTH/2f, player.getPosition().y);
 		Texture.setEnforcePotImages(false);
 		font.setColor(0, 1, 0, 1);
+		//beesprite
+//		beeSprite.rotate(180);
+		beeSprite.setSize(100, 100);
 	}
 	
-	public void render() {
-		drawUnits();
+	public void render(float delta) {
+		drawUnits(delta);
 		drawPlayer();
 		
 		drawBullet();
 		drawUI();
 	}
+	
+	
 	
 	public void drawUI() {
 		drawInfo();
@@ -118,43 +127,79 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 	}
 	
 	
-	public void drawUnits() {
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeType.Filled);
-//		batch.begin();
-		for(Unit unit: world.getUnitList()) {
-			if(unit.isOverlapped()) continue;
-			rectangle = unit.getBounds();
-			x1 = unit.getPosition().x; //float
-			y1 = unit.getPosition().y;
-			shapeRenderer.setColor(color);
-			shapeRenderer.rect(x1, y1, rectangle.width, rectangle.height);
-//			batch.setProjectionMatrix(camera.combined);
-//						
-//			batch.draw(flowerTexture, x1, y1);
-			drawUnitInfo(unit);
+	public void drawUnits(float delta) {
+		if (withTextures) {
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();
+			for(Unit unit: world.getUnitList()) {
+				if(unit.isOverlapped()) continue;
+				rectangle = unit.getBounds();
+				x1 = unit.getPosition().x; //float
+				y1 = unit.getPosition().y;
+				if(unit instanceof Flower) {
+					batch.draw(flowerTexture, x1, y1);		
+				}
+				if(unit instanceof Wasp) {
+					
+					beeSprite.setBounds(x1-50, y1-100, 100, 100);
+//					beeSprite.setPosition(x1, y1);
+					beeSprite.setRotation(180);
+					beeSprite.draw(batch);	
+				}
+				else {
+					
+				}
+						
+			}
+			batch.end();
+			for(Unit unit: world.getUnitList()) {
+				drawUnitInfo(unit);
+			}
+//		}
+//		else {
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			for(Unit unit: world.getUnitList()) {
+				if(unit.isOverlapped()) continue;
+				rectangle = unit.getBounds();
+				x1 = unit.getPosition().x; //float
+				y1 = unit.getPosition().y;				
+				shapeRenderer.setColor(color);
+				shapeRenderer.rect(x1, y1, rectangle.width, rectangle.height);				
+				drawUnitInfo(unit); 
+			}
+			shapeRenderer.end();				
 		}
-//		batch.end();
-		shapeRenderer.end();
 	}
 	
 	public void drawPlayer() {
-
 		setCamera(CAMERA_WIDTH/2f, player.getPosition().y+200);
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		player = world.getPlayer();
-		shapeRenderer.begin(ShapeType.Filled);
-		rectangle = player.getPlayerBounds();
-		x1 = player.getPosition().x; // + rectangle.x
-		y1 = player.getPosition().y; // + rectangle.y
-//		batch.setProjectionMatrix(camera.combined);
-//		batch.begin();
-//		
-//		batch.draw(beeTexture, x1, y1, 100, 100);
-//		batch.end();
-		shapeRenderer.setColor(new Color(1,0,0,1));
-		shapeRenderer.rect(x1, y1, rectangle.width, rectangle.height);
-		shapeRenderer.end();
+		if(withTextures) {			
+			player = world.getPlayer();
+			rectangle = player.getPlayerBounds();
+			x1 = player.getPosition().x; // + rectangle.x
+			y1 = player.getPosition().y; // + rectangle.y
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();		
+			float xdraw;
+			float ydraw;
+			xdraw = x1 - Math.abs((rectangle.width - 100)/2);
+			ydraw = y1 - Math.abs((rectangle.height - 100)/2);
+			batch.draw(beeTexture, xdraw, ydraw, 100, 100);
+			batch.end();
+//		}
+//		else {
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			player = world.getPlayer();
+			shapeRenderer.begin(ShapeType.Line);
+			rectangle = player.getPlayerBounds();
+			x1 = player.getPosition().x; // + rectangle.x
+			y1 = player.getPosition().y; // + rectangle.y
+			shapeRenderer.setColor(new Color(1,0,0,1));
+			shapeRenderer.rect(x1, y1, rectangle.width, rectangle.height);
+			shapeRenderer.end();
+		}
+		
 	}
 	
 	public void drawBullet() {
@@ -197,18 +242,15 @@ public class WorldRenderer implements PlayerTextures, UnitTextures{
 		String unitCoord = unit.getPosition().x+","+unit.getPosition().y;
 		font.draw(batch, unitCoord, unit.getPosition().x, unit.getPosition().y+unit.getBounds().height);
 		font.draw(batch, unit.getClass().toString(), unit.getPosition().x , unit.getPosition().y+unit.getBounds().height-20);
-		
+//		System.out.println(StringUtils.build("unit.getP.y = ", Float.toString(unit.getPosition().y)));
 		batch.end();
 	}
 	
 	public void drawInfo() {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		
-		
 		String playerCoord = player.getPosition().x+","+player.getPosition().y;
-		String playerVelocity = player.getVelocity().x+","+player.getVelocity().y;
-		
+		String playerVelocity = player.getVelocity().x+","+player.getVelocity().y;		
 		// font will be always displayed
 		float fontWidth = font.getBounds(playerCoord).width;
 		if(fontWidth > CAMERA_WIDTH - player.SIZE - player.getPosition().x) {

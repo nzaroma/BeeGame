@@ -5,6 +5,7 @@ import java.util.Iterator;
 import ru.roman.bee.constants.WorldConstants;
 import ru.roman.bee.model.player.Player;
 import ru.roman.bee.model.unit.Flower;
+import ru.roman.bee.model.unit.State;
 import ru.roman.bee.model.unit.Unit;
 import ru.roman.bee.model.unit.Wasp;
 import ru.roman.bee.model.unit.utils.UnitUtils;
@@ -22,6 +23,7 @@ public class UnitController {
 	private long lastDropTime; // = TimeUtils.nanoTime();
 	private World world;
 	private Player player;
+	private long lastShootTimeWasp;
 
 	public UnitController(World world) {
 		this.unitArray = world.getUnitList();
@@ -32,12 +34,10 @@ public class UnitController {
 
 	private void spawnFlower() {
 		Unit flower = new Flower();
-		Rectangle rectangle = flower.getBounds();
 		flower.getPosition().x = MathUtils.random(0, WorldConstants.WORLD_WIDTH
-				- Flower.SIZE); // 800 replace with parameter
+				- Flower.SIZE); 
 		flower.getPosition().y = player.getPosition().y
 				+ WorldConstants.WORLD_HEIGHT + 200;
-		// ///////////////// разобраться с координатами цветка
 		flower.getBounds().x = flower.getPosition().x;
 		flower.getBounds().y = flower.getPosition().y;
 		unitArray.add(flower);
@@ -58,7 +58,7 @@ public class UnitController {
 	private void processAddingFlowers() {
 		Unit lastFlower = UnitUtils.getLastUnitOfType(unitArray, Flower.class);
 		if (player.getPosition().y > lastFlower.getPosition().y) {
-			System.out.println(lastFlower);
+//			System.out.println(lastFlower);
 			spawnFlower();
 		}			
 	}	
@@ -70,7 +70,7 @@ public class UnitController {
 			lastWasp = UnitUtils.getLastUnitOfType(unitArray, Wasp.class);
 		}
 		if (player.getPosition().y > lastWasp.getPosition().y) {
-			System.out.println(lastWasp);
+//			System.out.println(lastWasp);
 			spawnWasp();
 		}
 	}	
@@ -86,18 +86,28 @@ public class UnitController {
 	}
 
 	private void processWasps(float delta) {
+		/*
+		 * flying
+		 */
 		Iterator<Unit> iterator = unitArray.iterator();
 		while(iterator.hasNext()) {
 			Unit unit = iterator.next();
 			if(unit instanceof Wasp) {
-				if(unit.getPosition().y - player.getPosition().y < 400f) {
-					System.out.println(StringUtils.build("unit.getP.y = ", Float.toString(unit.getVelocity().y)));
-					System.out.println(StringUtils.build("player.getP.y = ", Float.toString(player.getVelocity().y)));
-//					unit.getVelocity().y = 350;		
-					unit.getPosition().y = player.getPosition().y + 390;
-				}						
+				if(unit.getState() != State.DEAD) {
+					unit.updateVelocity(delta, player);
+				}
 			}
-			unit.updateVelocity(delta);
+		}
+		/*
+		 * shooting
+		 */
+		if(System.currentTimeMillis() - lastShootTimeWasp > 1000) {
+			while(iterator.hasNext()) {
+				Unit unit = iterator.next();
+				if(unit instanceof Wasp) {
+//					unit.shoot();						
+				}
+			}
 		}
 	}
 

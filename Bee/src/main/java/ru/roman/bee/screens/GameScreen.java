@@ -38,7 +38,53 @@ public class GameScreen implements Screen, InputProcessor{
 		
 	}
 	
-
+	@Override
+	public void render(float delta) {		
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		
+//		worldController.update(delta);
+		Gdx.gl.glViewport(0,0,WorldConstants.WORLD_WIDTH,WorldConstants.WORLD_HEIGHT);
+//		renderer.render(delta);	
+		worldController.processInput(delta);
+		
+		worldController.processPlayer(delta);
+		renderer.drawPlayer();
+		
+		worldController.processUnits(delta);
+		renderer.drawUnits(delta);
+		
+		worldController.processBullets(delta);
+		renderer.drawBullet();
+		
+		worldController.processInteractions(delta);
+		renderer.drawUI();
+		
+		Gdx.gl.glViewport(WorldConstants.WORLD_WIDTH,0,300,WorldConstants.WORLD_HEIGHT);   
+		rightPanel.render();
+		
+		Gdx.gl.glViewport(0, 200, 50, 200);
+		energyBar.render();
+		
+		
+		/*
+		 * 	Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		
+		worldController.update(delta);
+		Gdx.gl.glViewport(0,0,WorldConstants.WORLD_WIDTH,WorldConstants.WORLD_HEIGHT);
+//		renderer.render(delta);	
+		renderer.drawPlayer();
+		
+		Gdx.gl.glViewport(WorldConstants.WORLD_WIDTH,0,300,WorldConstants.WORLD_HEIGHT);   
+		rightPanel.render();
+		
+		Gdx.gl.glViewport(0, 200, 50, 200);
+		energyBar.render();
+		 */
+	}
 	@Override
 	public boolean keyDown(int keycode) {
 		changeNavigation(keycode);
@@ -91,23 +137,8 @@ public class GameScreen implements Screen, InputProcessor{
 		return false;
 	}
 
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		worldController.update(delta);
-		
-		Gdx.gl.glViewport(0,0,WorldConstants.WORLD_WIDTH,WorldConstants.WORLD_HEIGHT);
-		renderer.render();		
-		
-		Gdx.gl.glViewport(WorldConstants.WORLD_WIDTH,0,300,WorldConstants.WORLD_HEIGHT);   
-		rightPanel.render();
-		
-		Gdx.gl.glViewport(0, 200, 50, 200);
-		energyBar.render();
-		
-	}
+	
+	
 
 	@Override
 	public void resize(int width, int height) {
